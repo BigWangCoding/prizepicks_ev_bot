@@ -1,0 +1,76 @@
+# PrizePicks EV Bot — Configuration
+# All tunable parameters. Edit this file freely — do not hardcode values in source.
+
+# ─────────────────────────────────────────────
+# SCHEDULER
+# ─────────────────────────────────────────────
+scheduler:
+  game_day_interval_minutes: 2
+  off_peak_interval_minutes: 20
+  pregame_interval_seconds: 30
+  active_hours_et: "16:00-01:00"
+
+# ─────────────────────────────────────────────
+# ANALYTICS
+# ─────────────────────────────────────────────
+analytics:
+  min_ev_pct: 2.0
+  half_kelly: true
+  default_bankroll: 1000.00
+  min_match_confidence: 0.85
+  min_books_for_high_confidence: 2
+
+# ─────────────────────────────────────────────
+# BOOK WEIGHTS (must sum to 1.0)
+# Pinnacle closed public API July 2025.
+# FanDuel is now the sharpest accessible source for NBA player props.
+# ─────────────────────────────────────────────
+books:
+  weights:
+    fanduel: 0.40
+    draftkings: 0.25
+    betmgm: 0.20
+    caesars: 0.15
+
+# ─────────────────────────────────────────────
+# PRIZEPICKS PAYOUT MAP
+# Fixed multipliers per entry type. Verify against the PP app — these can change.
+# ─────────────────────────────────────────────
+prizepicks:
+  payouts:
+    power_2: 3.00
+    power_3: 5.00
+    power_4: 10.00
+    power_5: 20.00
+    power_6: 40.00
+    flex_3_2wins: 1.25
+    flex_4_3wins: 1.50
+    flex_5_4wins: 2.00
+    flex_6_5wins: 2.50
+  default_entry_type: "power_2"
+
+# ─────────────────────────────────────────────
+# MARKET WIDTH THRESHOLDS (cents / American odds points)
+# Lower = tighter = more confident market = more trust in the edge
+# ─────────────────────────────────────────────
+market_width:
+  tight_threshold: 25
+  wide_threshold: 50
+
+# ─────────────────────────────────────────────
+# ALERTS
+# ─────────────────────────────────────────────
+alerts:
+  discord_webhook_url: ""
+  min_ev_pct_for_alert: 4.0
+  min_confidence_for_alert: "medium"
+  dedup_window_minutes: 30
+
+# ─────────────────────────────────────────────
+# LOGGING
+# ─────────────────────────────────────────────
+logging:
+  level: "INFO"
+  format: "text"
+  log_unresolved_players: true
+  unresolved_log_path: "logs/unresolved_players.log"
