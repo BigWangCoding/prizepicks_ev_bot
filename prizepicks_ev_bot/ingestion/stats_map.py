@@ -36,6 +36,7 @@ STAT_ALIAS_MAP: dict[str, StatType] = {
     # 3-POINTERS MADE
     "3-pointers made": StatType.THREE_PM,
     "3pt made": StatType.THREE_PM,
+    "3-pt made": StatType.THREE_PM,
     "3pm": StatType.THREE_PM,
     "3 pointers made": StatType.THREE_PM,
     "threes": StatType.THREE_PM,
@@ -43,6 +44,8 @@ STAT_ALIAS_MAP: dict[str, StatType] = {
     "player_threes": StatType.THREE_PM,
     "player threes": StatType.THREE_PM,
     "player_three_pointers_made": StatType.THREE_PM,
+    # 3-POINTERS ATTEMPTED
+    "3-pt attempted": StatType.THREE_PA,
     # STEALS
     "steals": StatType.STEALS,
     "stl": StatType.STEALS,
@@ -51,8 +54,12 @@ STAT_ALIAS_MAP: dict[str, StatType] = {
     # BLOCKS
     "blocks": StatType.BLOCKS,
     "blk": StatType.BLOCKS,
+    "blocked shots": StatType.BLOCKS,
     "player_blocks": StatType.BLOCKS,
     "player blocks": StatType.BLOCKS,
+    # BLOCKS + STEALS
+    "blks+stls": StatType.BA,
+    "player_blocks_steals": StatType.BA,
     # TURNOVERS
     "turnovers": StatType.TURNOVERS,
     "tov": StatType.TURNOVERS,
@@ -60,22 +67,26 @@ STAT_ALIAS_MAP: dict[str, StatType] = {
     "player turnovers": StatType.TURNOVERS,
     # COMBOS — Points + Rebounds + Assists
     "pts+reb+ast": StatType.PRA,
+    "pts+rebs+asts": StatType.PRA,
     "p+r+a": StatType.PRA,
     "points+rebounds+assists": StatType.PRA,
     "pts_reb_ast": StatType.PRA,
     "player_points_rebounds_assists": StatType.PRA,
     # COMBOS — Points + Rebounds
     "pts+reb": StatType.PR,
+    "pts+rebs": StatType.PR,
     "points+rebounds": StatType.PR,
     "pts_reb": StatType.PR,
     "player_points_rebounds": StatType.PR,
     # COMBOS — Points + Assists
     "pts+ast": StatType.PA,
+    "pts+asts": StatType.PA,
     "points+assists": StatType.PA,
     "pts_ast": StatType.PA,
     "player_points_assists": StatType.PA,
     # COMBOS — Rebounds + Assists
     "reb+ast": StatType.RA,
+    "rebs+asts": StatType.RA,
     "rebounds+assists": StatType.RA,
     "reb_ast": StatType.RA,
     "player_rebounds_assists": StatType.RA,
@@ -83,6 +94,34 @@ STAT_ALIAS_MAP: dict[str, StatType] = {
     "fantasy score": StatType.FANTASY_SCORE,
     "fantasy_score": StatType.FANTASY_SCORE,
     "fantasy points": StatType.FANTASY_SCORE,
+    # Field Goals Made
+    "fg made": StatType.FGM,
+    # Two Pointers Attempted
+    "two pointers attempted": StatType.FG2A,
+    "fg attempted": StatType.FG2A,
+    # Two Pointers Made
+    "two pointers made": StatType.FG2M,
+    # Free Throws Attempted
+    "free throws attempted": StatType.FTA,
+    # Free Throws Made
+    "free throws made": StatType.FTM,
+    # Two Pointers Made
+    # Offensive Rebounds
+    "offensive rebounds": StatType.OFFENSIVE_REBOUNDS,
+    # Defensive Rebounds
+    "defensive rebounds": StatType.DEFENSIVE_REBOUNDS,
+    # Dunks
+    "dunks": StatType.DUNKS,
+    # Double-Doubles
+    "double-double": StatType.DD,
+    # Triple-Doubles
+    "triple-double": StatType.TD,
+    # Personal Fouls
+    "personal fouls": StatType.PF,
+    # 1st quarter 3 minutes
+    "points - 1st 3 minutes": StatType.POINTS1Q3M,
+    "assists - 1st 3 minutes": StatType.ASSISTS1Q3M,
+    "rebounds - 1st 3 minutes": StatType.REBOUNDS1Q3M,
 }
 
 

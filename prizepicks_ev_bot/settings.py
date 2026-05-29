@@ -13,18 +13,20 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
 import yaml
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 # ─────────────────────────────────────────────────────────────────
 # .ENV SETTINGS
 # ─────────────────────────────────────────────────────────────────
 
-class Settings(BaseSettings):
+
+class Settings(BaseSettings):  # type: ignore[misc]
     """Loads secrets from .env or real environment variables."""
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
@@ -32,7 +34,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    odds_api_key: SecretStr = Field(default="dev_placeholder")
+    odds_api_key: SecretStr = Field(default=SecretStr("dev_placeholder"))
     database_url: str = Field(
         default="postgresql+asyncpg://ppev:password@localhost:5432/prizepicks_ev_bot"
     )
@@ -47,8 +49,12 @@ class Settings(BaseSettings):
 # CONFIG.YAML MODELS
 # ─────────────────────────────────────────────────────────────────
 
+# yaml.safe_load returns an untyped dict; using Any here is correct and idiomatic —
+# it lets the value lookups propagate cleanly without per-line suppressions.
+
+
 class SchedulerConfig:
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict[str, Any]) -> None:
         self.game_day_interval_minutes: int = data["game_day_interval_minutes"]
         self.off_peak_interval_minutes: int = data["off_peak_interval_minutes"]
         self.pregame_interval_seconds: int = data["pregame_interval_seconds"]
@@ -56,7 +62,7 @@ class SchedulerConfig:
 
 
 class AnalyticsConfig:
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict[str, Any]) -> None:
         self.min_ev_pct: float = data["min_ev_pct"]
         self.half_kelly: bool = data["half_kelly"]
         self.default_bankroll: float = data["default_bankroll"]
@@ -65,24 +71,24 @@ class AnalyticsConfig:
 
 
 class BooksConfig:
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict[str, Any]) -> None:
         self.weights: dict[str, float] = data["weights"]
 
 
 class PrizePicksConfig:
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict[str, Any]) -> None:
         self.payouts: dict[str, float] = data["payouts"]
         self.default_entry_type: str = data["default_entry_type"]
 
 
 class MarketWidthConfig:
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict[str, Any]) -> None:
         self.tight_threshold: int = data["tight_threshold"]
         self.wide_threshold: int = data["wide_threshold"]
 
 
 class AlertsConfig:
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict[str, Any]) -> None:
         self.discord_webhook_url: str = data["discord_webhook_url"]
         self.min_ev_pct_for_alert: float = data["min_ev_pct_for_alert"]
         self.min_confidence_for_alert: str = data["min_confidence_for_alert"]
@@ -91,7 +97,8 @@ class AlertsConfig:
 
 class AppConfig:
     """Parsed config.yaml — all tunable, non-secret parameters."""
-    def __init__(self, data: dict) -> None:
+
+    def __init__(self, data: dict[str, Any]) -> None:
         self.scheduler = SchedulerConfig(data["scheduler"])
         self.analytics = AnalyticsConfig(data["analytics"])
         self.books = BooksConfig(data["books"])
@@ -104,16 +111,17 @@ class AppConfig:
 # LOADERS
 # ─────────────────────────────────────────────────────────────────
 
+
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
-    return Settings()  # type: ignore[call-arg]
+    return Settings()
 
 
 @lru_cache(maxsize=1)
 def get_config() -> AppConfig:
     config_path = Path(__file__).parent.parent / "config.yaml"
-    with open(config_path, encoding='utf-8') as f:
-        raw = yaml.safe_load(f)
+    with open(config_path, encoding="utf-8") as f:
+        raw: dict[str, Any] = yaml.safe_load(f)
     return AppConfig(raw)
 
 

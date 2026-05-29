@@ -15,25 +15,42 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, field_validator
 
-
 # ─────────────────────────────────────────────────────────────────
 # ENUMS
 # ─────────────────────────────────────────────────────────────────
 
+
 class StatType(str, Enum):
     """Canonical stat types. All sources are normalized to these values."""
+
     POINTS = "points"
     REBOUNDS = "rebounds"
     ASSISTS = "assists"
+    OFFENSIVE_REBOUNDS = "offensive_rebounds"
+    DEFENSIVE_REBOUNDS = "defensive_rebounds"
     THREE_PM = "three_pointers_made"
+    THREE_PA = "three_pointers_attempted"
     STEALS = "steals"
     BLOCKS = "blocks"
+    BA = "blks_stls"
     TURNOVERS = "turnovers"
     PRA = "pts_reb_ast"
     PR = "pts_reb"
     PA = "pts_ast"
     RA = "reb_ast"
     FANTASY_SCORE = "fantasy_score"
+    FGM = "field_goal_made"
+    FG2A = "two_pointers_attempted"
+    FG2M = "two_pointers_made"
+    FTA = "free_throws_attempted"
+    FTM = "free_throws_made"
+    DUNKS = "dunks"
+    DD = "double_double"
+    TD = "triple_double"
+    PF = "personal_fouls"
+    POINTS1Q3M = "points_1st_quarter_3_minutes"
+    REBOUNDS1Q3M = "rebounds_1st_quarter_3_minutes"
+    ASSISTS1Q3M = "assists_1st_quarter_3_minutes"
 
 
 class Side(str, Enum):
@@ -56,19 +73,21 @@ class EntryType(str, Enum):
 # RAW INGESTION MODELS
 # ─────────────────────────────────────────────────────────────────
 
+
 class OddsLine(BaseModel):
     """
     A single prop line from a sharp sportsbook.
     Both over AND under odds are required — we need both sides to remove vig.
     """
+
     id: UUID = Field(default_factory=uuid4)
     player_name: str
-    team: str
     stat_type: StatType
+    team: str
     line: float
-    over_odds: int                    # American odds e.g. -115
-    under_odds: int                   # American odds e.g. -108
-    source: str                       # "fanduel", "draftkings", "betmgm", "caesars"
+    over_odds: int  # American odds e.g. -115
+    under_odds: int  # American odds e.g. -108
+    source: str  # "fanduel", "draftkings", "betmgm", "caesars"
     market_width: float = Field(default=0.0)
     fetched_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -94,6 +113,7 @@ class PrizePicksLine(BaseModel):
     PrizePicks uses fixed multipliers, not American odds —
     implied odds are reverse-engineered in the analytics layer.
     """
+
     id: UUID = Field(default_factory=uuid4)
     player_name: str
     team: str
@@ -109,11 +129,13 @@ class PrizePicksLine(BaseModel):
 # NORMALIZED / MATCHED MODELS
 # ─────────────────────────────────────────────────────────────────
 
+
 class MatchedMarket(BaseModel):
     """
     A PrizePicks line successfully matched to one or more sharp book lines.
     This is the input to the analytics engine.
     """
+
     id: UUID = Field(default_factory=uuid4)
     canonical_player: str
     stat_type: StatType
@@ -131,11 +153,13 @@ class MatchedMarket(BaseModel):
 # ANALYTICS OUTPUT MODELS
 # ─────────────────────────────────────────────────────────────────
 
+
 class EVResult(BaseModel):
     """
     The fully computed +EV result for a single matched market.
     All CLI output columns come from this model.
     """
+
     id: UUID = Field(default_factory=uuid4)
     matched_market_id: UUID
 
@@ -147,14 +171,14 @@ class EVResult(BaseModel):
 
     # Core OddsJam-style columns
     recommended_side: Side
-    pp_implied_odds: int              # what PP is effectively offering (American)
-    no_vig_fair_odds: int             # sharp consensus fair odds after vig removal
-    sharp_consensus_prob: float       # no-vig win probability (0.0 – 1.0)
+    pp_implied_odds: int  # what PP is effectively offering (American)
+    no_vig_fair_odds: int  # sharp consensus fair odds after vig removal
+    sharp_consensus_prob: float  # no-vig win probability (0.0 – 1.0)
 
     # EV & sizing
-    ev_pct: float                     # profit margin per $100
+    ev_pct: float  # profit margin per $100
     kelly_fraction: float
-    rec_bet_size: float               # half-Kelly dollar recommendation
+    rec_bet_size: float  # half-Kelly dollar recommendation
 
     # Confidence signals
     market_width: float
@@ -166,6 +190,7 @@ class EVResult(BaseModel):
 
 class LineMovement(BaseModel):
     """Tracks when a sharp book's odds move between pipeline runs."""
+
     player_name: str
     stat_type: StatType
     source: str
@@ -181,8 +206,10 @@ class LineMovement(BaseModel):
 # BACKTESTING MODELS
 # ─────────────────────────────────────────────────────────────────
 
+
 class OutcomeResult(BaseModel):
     """Actual box score result for a previously surfaced EV pick."""
+
     ev_result_id: UUID
     canonical_player: str
     stat_type: StatType
@@ -195,6 +222,7 @@ class OutcomeResult(BaseModel):
 
 class CLVRecord(BaseModel):
     """Closing Line Value: did our pick beat the closing sharp odds?"""
+
     ev_result_id: UUID
     open_sharp_fair_odds: int
     close_sharp_fair_odds: int
