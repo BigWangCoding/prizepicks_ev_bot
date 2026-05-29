@@ -136,8 +136,8 @@ uv run ppev --help
 
 | Phase | Module | Status |
 |---|---|---|
-| 1 | Odds Ingestion + Data Models | 🟡 In Progress |
-| 2 | Normalization + Storage | ⬜ Not Started |
+| 1 | Odds Ingestion + Data Models | 🟢 Complete |
+| 2 | Normalization + Storage | 🟡 In Progress |
 | 3 | Analytics Engine | ⬜ Not Started |
 | 4 | Scheduler + Automation | ⬜ Not Started |
 | 5 | CLI + Discord Alerts | ⬜ Not Started |
