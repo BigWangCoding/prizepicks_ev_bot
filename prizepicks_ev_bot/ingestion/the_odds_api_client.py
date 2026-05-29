@@ -87,7 +87,7 @@ class TheOddsAPIClient(BaseClient):
         if stat_type_n is None:
             return None
 
-        if point is None:
+        if not point or point == "None":
             return None
         over_line = value.get("Over_line")
         under_line = value.get("Under_line")
@@ -120,7 +120,7 @@ class TheOddsAPIClient(BaseClient):
                 for outcome in outcomes:
                     player_name = outcome.get("description", "")
                     point = outcome.get("point")
-                    book_key = book.get("key", None).strip()
+                    book_key = book.get("key" or "").strip()
                     name = f"{player_name}|{market_type}|{book_key}|{point}"
                     if name not in player_map:
                         player_map[name] = dict()

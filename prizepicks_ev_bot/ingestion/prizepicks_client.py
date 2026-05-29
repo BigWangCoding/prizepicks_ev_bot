@@ -135,17 +135,6 @@ class PrizePicksClient(BaseClient):
             num_legs=2,
         )
 
-        # Step E: Build and return the PrizePicksLine object
-        # FILL IN: return PrizePicksLine(
-        #     player_name=...,
-        #     team=...,
-        #     stat_type=...,
-        #     line=...,
-        #     entry_type=EntryType.POWER,
-        #     num_legs=2,
-        # )
-        ...
-
 
 def _build_player_lookup(included: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     """
